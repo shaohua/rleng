@@ -1,0 +1,46 @@
+id: design-a-reward
+version: 1
+order: 2
+title: Design a reward that can't be gamed
+summary: Fix a plausible-looking reward until an optimizer can no longer cheat it.
+hardware: {gpu: false}
+time: {smoke: 1m, full: 15m}
+requires: [eval-an-agent]
+edit: [reward.py]
+steps:
+  - name: stress-test-reward
+    run: "{python} evaluate.py"
+checks:
+  - id: correct_scores_high
+    metric: correct_mean
+    op: ">="
+    value: 0.95
+    hint: "Correct calls (including ```json fences, reordered keys, extra whitespace) should score ~1.0. Parse the JSON instead of matching strings."
+  - id: hacks_score_low
+    metric: hack_max
+    op: "<="
+    value: 0.1
+    hint: "Some hack scores well. `rleng inspect` shows mean reward by kind; read the hack_* outputs. Require exactly one JSON object with a 'tool' string and an 'args' object."
+  - id: partial_credit_ordering
+    metric: ordering_ok_rate
+    op: ">="
+    value: 0.95
+    hint: "Want correct > partial_args > wrong_tool on every task. Partial credit gives GRPO a gradient; zero-or-one rewards make most groups identical."
+  - id: optimizer_picks_correct
+    metric: optimizer_picks_correct
+    op: ">="
+    value: 0.95
+    hint: "When the reward ties a hack with the correct answer, an RL policy will drift to the hack. Break every tie in favor of correct."
+  - id: rewards_in_range
+    metric: out_of_range
+    op: "=="
+    value: 0
+    hint: "Keep rewards in [0, 1]."
+  - id: no_crashes
+    metric: reward_errors
+    op: "=="
+    value: 0
+    hint: "reward() raised on some output. Models produce arbitrary text; never let the reward crash (catch JSON errors, check types)."
+  - id: rollouts_saved
+    file: rollouts.jsonl
+    min_rows: 100

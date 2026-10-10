@@ -1,0 +1,19 @@
+[project]
+name = "rleng"
+version = "0.1.0"
+description = "RL for engineers: short, verified, agent-runnable recipes for rewards, evals and small-scale GRPO."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["pyyaml>=6"]
+
+[project.scripts]
+rleng = "rleng.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rleng"]
+exclude = ["**/runs/**", "**/.venv/**", "**/__pycache__/**"]

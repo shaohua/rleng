@@ -1,0 +1,63 @@
+id: first-grpo
+version: 1
+order: 4
+title: Your first GRPO run
+summary: Train a tiny model with GRPO + LoRA to emit correct tool calls, scored by the reward you designed in recipe 2.
+hardware: {gpu: true, min_vram_gb: 8, verified: [apple-m1-pro-16gb]}  # CUDA (T4/L4/4090) not yet verified
+time: {smoke: 5m, full: 15m}
+requires: [design-a-reward]
+edit: []
+steps:
+  - name: install
+    run: uv sync --locked
+  - name: baseline-eval
+    run: uv run --locked eval.py --out {run_dir}/baseline.json
+  - name: train
+    run: uv run --locked train.py
+  - name: final-eval
+    run: uv run --locked eval.py --adapter {run_dir}/adapter --out {run_dir}/final.json
+  - name: summarize
+    run: uv run --locked summarize.py
+checks:
+  - id: training_ran
+    metric: train_steps
+    op: ">="
+    value: 8
+    hint: "Fewer steps than expected were logged. Read runs/<id>/log.txt for the train step error (OOM: see AGENT.md, --num-generations 4)."
+  - id: rewards_not_degenerate
+    metric: reward_std_mean
+    op: ">"
+    value: 0.02
+    hint: "Every completion in every group got the same reward, so GRPO had no signal. Check that reward.py gives partial credit and that outputs are not all empty/truncated (`rleng inspect`)."
+  - id: some_groups_have_signal
+    metric: zero_std_frac_mean
+    op: "<"
+    value: 0.9
+    modes: [smoke]  # in full mode groups legitimately go zero-std once the model solves the tasks
+    hint: "Almost every group had identical rewards. Raise --temperature or --num-generations so samples differ, or make the reward less all-or-nothing."
+  - id: model_still_emits_json
+    metric: final_valid_json
+    op: ">="
+    value: 0.2
+    hint: "The trained model mostly stopped producing parseable calls. Learning rate may be too high (try --lr 2e-5) or the reward is being hacked; read the lowest-reward rollouts."
+  - id: rollouts_saved
+    file: rollouts.jsonl
+    min_rows: 160
+  - id: accuracy_improved
+    metric: accuracy_gain
+    op: ">="
+    value: 0.25
+    modes: [full]
+    hint: "Held-out accuracy did not move enough. Check reward_first vs reward_last: if training reward rose but eval did not, the policy may be exploiting the reward; if neither rose, try more steps or --lr 1e-4."
+  - id: final_accuracy_high
+    metric: final_accuracy
+    op: ">="
+    value: 0.6
+    modes: [full]
+    hint: "The trained model still misses many held-out tasks. Read the rows with reward < 1 in runs/<id>/final.json: wrong tool -> more --steps; broken JSON -> lower --lr."
+  - id: train_reward_rose
+    metric: reward_gain
+    op: ">="
+    value: 0.05
+    modes: [full]
+    hint: "Mean training reward barely moved between the first and last 20% of steps. Look at zero_std_frac_last: near 1.0 with low reward means no learning signal."

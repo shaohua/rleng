@@ -1,0 +1,1 @@
+{"agent": "claude", "recipe": "first-grpo", "trial": "1", "pass": "no-run", "seconds": 237, "changed": ["+full.out", "+smoke.out"], "turns": 9, "cost_usd": 0.2667424, "workdir": "/tmp/rleng-harness-H3Zy"}

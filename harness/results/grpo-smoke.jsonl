@@ -1,0 +1,2 @@
+{"agent": "claude", "recipe": "first-grpo", "trial": "1", "pass": "True", "seconds": 245, "changed": [], "turns": 8, "cost_usd": 0.2772774, "workdir": "/tmp/rleng-harness-AvJv"}
+{"agent": "claude", "recipe": "first-grpo", "trial": "2", "pass": "True", "seconds": 232, "changed": [], "turns": 8, "cost_usd": 0.28263040000000006, "workdir": "/tmp/rleng-harness-vRLr"}

@@ -1,0 +1,2 @@
+{"agent": "claude", "recipe": "eval-an-agent", "trial": "1", "pass": "True", "seconds": 37, "changed": ["verifier.py"], "turns": 9, "cost_usd": 0.293462, "workdir": "/tmp/rleng-harness-ppuP"}
+{"agent": "claude", "recipe": "design-a-reward", "trial": "1", "pass": "True", "seconds": 57, "changed": ["reward.py"], "turns": 9, "cost_usd": 0.34402780000000005, "workdir": "/tmp/rleng-harness-kwk4"}

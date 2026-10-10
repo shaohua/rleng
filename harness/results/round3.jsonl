@@ -1,0 +1,7 @@
+{"agent": "codex", "recipe": "eval-an-agent", "trial": "1", "pass": "True", "seconds": 50, "changed": ["verifier.py"], "turns": null, "cost_usd": null, "workdir": "/tmp/rleng-harness-9f2A"}
+{"agent": "codex", "recipe": "eval-an-agent", "trial": "2", "pass": "True", "seconds": 51, "changed": ["verifier.py"], "turns": null, "cost_usd": null, "workdir": "/tmp/rleng-harness-DZR6"}
+{"agent": "claude", "recipe": "design-a-reward", "trial": "4", "pass": "True", "seconds": 52, "changed": ["reward.py"], "turns": 10, "cost_usd": 0.3486132, "workdir": "/tmp/rleng-harness-E75g"}
+{"agent": "codex", "recipe": "eval-an-agent", "trial": "3", "pass": "True", "seconds": 53, "changed": ["verifier.py"], "turns": null, "cost_usd": null, "workdir": "/tmp/rleng-harness-X5XI"}
+{"agent": "codex", "recipe": "design-a-reward", "trial": "3", "pass": "True", "seconds": 63, "changed": ["reward.py"], "turns": null, "cost_usd": null, "workdir": "/tmp/rleng-harness-dEwa"}
+{"agent": "codex", "recipe": "design-a-reward", "trial": "1", "pass": "True", "seconds": 74, "changed": ["reward.py"], "turns": null, "cost_usd": null, "workdir": "/tmp/rleng-harness-rS22"}
+{"agent": "codex", "recipe": "design-a-reward", "trial": "2", "pass": "True", "seconds": 74, "changed": ["reward.py"], "turns": null, "cost_usd": null, "workdir": "/tmp/rleng-harness-mBPt"}

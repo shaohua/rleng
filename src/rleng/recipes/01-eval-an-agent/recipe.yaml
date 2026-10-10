@@ -1,0 +1,36 @@
+id: eval-an-agent
+version: 1
+order: 1
+title: Evaluate an agent (and your evaluator)
+summary: Score two tool-using agents with a programmatic verifier, and measure the verifier against ground truth.
+hardware: {gpu: false}
+time: {smoke: 1m, full: 10m}
+requires: []
+edit: [verifier.py]
+steps:
+  - name: evaluate
+    run: "{python} evaluate.py"
+checks:
+  - id: catches_real_failures
+    metric: verifier_recall
+    op: ">="
+    value: 0.95
+    hint: "Your verifier passes trajectories that actually failed. `rleng inspect` lists them by failure type. Check the process (right tool + args vs traj['expected']) AND the outcome (answer grounded in the tool result)."
+  - id: no_false_alarms
+    metric: verifier_precision
+    op: ">="
+    value: 0.95
+    hint: "Your verifier fails trajectories that were actually fine. Look at the lowest-scored 'ok' rows in `rleng inspect`; your check is too strict (formatting? case?)."
+  - id: ranks_agents_correctly
+    metric: ranks_a_above_b
+    op: "=="
+    value: 1
+    hint: "Agent A is genuinely better. If your verifier disagrees, it is measuring style, not success."
+  - id: no_crashes
+    metric: verifier_errors
+    op: "=="
+    value: 0
+    hint: "check() raised. Trajectories can lack tool calls or results; guard for empty lists."
+  - id: rollouts_saved
+    file: rollouts.jsonl
+    min_rows: 80
